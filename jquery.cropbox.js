@@ -195,6 +195,7 @@
             sourceImage.src = event.target.result;
         },
         resizeWorkarea = function() { 
+            refrashFrame(parseInt($frame.css('left')), parseInt($frame.css('top')));
         },
         imageMouseWheel = function(event) {
             if (event.deltaY > 0) {              

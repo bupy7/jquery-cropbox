@@ -1,0 +1,30 @@
+{
+    "name": "jquery-cropbox",
+    "version": "1.0.0",
+    "homepage": "https://github.com/bupy7/jquery-cropbox",
+    "authors": [
+        "Vasilij Belosludcev <bupy765@gmail.com>"
+    ],
+    "description": "A lightweight and simple plugin to crop your image.",
+    "main": [
+        "jquery.cropbox.js",
+        "jquery.cropbox.css"
+    ],
+    "keywords": [
+        "cropbox",
+        "crop",
+        "image"
+    ],
+    "license": "BSD 3-Clause",
+    "moduleType": [
+        "jquery"
+    ],
+    "ignore": [
+        ".*",
+        "*.md"
+    ],
+    "dependencies": {
+        "jquery": ">=1.8",
+        "jquery-mousewheel": "*"
+    }
+}

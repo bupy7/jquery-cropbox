@@ -21,6 +21,8 @@
         imageState = {},
         resizeState = {},
         sourceImage = new Image,
+        $document = $(document),
+        $window = $(window),
         ratio = 1,
         variants = [
             {
@@ -60,9 +62,9 @@
             
             $resize.on('mousedown', resizeMouseDown);
             $resize.on('mousemove mouseleave', resizeMouseMove);
-            $(document).on('mouseup', resizeMouseUp);
+            $document.on('mouseup', resizeMouseUp);
 
-            $(window).on('resize', resizeWorkarea);
+            $window.on('resize', resizeWorkarea);
             
             $inputFile.on('change', function() {
                 var fileReader = new FileReader();
@@ -110,15 +112,11 @@
             });
         },
         frameMouseDown = function(event) {
-            //event.stopImmediatePropagation();    
-
             frameState.dragable = true;
             frameState.mouseX = event.clientX;
             frameState.mouseY = event.clientY;
         },
         frameMouseMove = function(event) {
-            //event.stopImmediatePropagation();
-
             if (frameState.dragable) {
                 var xOld = $frame.css('left'),
                     yOld = $frame.css('top'),

@@ -37,6 +37,7 @@
         $btnCrop = null,
         $inputFile = null,
         $resize = null,
+        $cropped = null,
         frameState = {},
         imageState = {},
         resizeState = {},
@@ -75,6 +76,7 @@
             $workarea = $th.find('.workarea-cropbox');
             $membrane = $th.find('.membrane-cropbox');
             $resize = $th.find('.resize-cropbox');
+            $cropped = $th.find('.cropped-cropbox');
         },
         initEvents = function() {
             // move frame
@@ -92,11 +94,38 @@
             $membrane.on(EVENT_MOUSE_WHEEL, imageMouseWheel);
             // window resize
             $window.on(EVENT_RESIZE, resizeWorkarea);
+            // TODO
             // select image file
             $inputFile.on(EVENT_CHANGE, function() {
                 var fileReader = new FileReader();
                 fileReader.readAsDataURL(this.files[0]);
                 $(fileReader).one(EVENT_LOAD, loadImage);
+            });
+            // TODO
+            // crop image
+            $btnCrop.on('click', function() {
+                var width = $frame.width(),
+                    height = $frame.height(),
+                    x = $frame.position().left - $image.position().left,
+                    y = $frame.position().top - $image.position().top,
+                    canvas = $('<canvas />').attr({width: width, height: height})[0];
+                    canvas
+                        .getContext('2d')
+                        .drawImage(
+                            //$image[0], 
+                            x, 
+                            y,  
+                            canvas.width, 
+                            canvas.height,
+                            0,
+                            0,
+                            canvas.width,
+                            canvas.height
+                        );
+                $cropped.append($('<img>', {
+                    class: 'img-thumbnail',
+                    src: canvas.toDataURL('image/png')
+                }));
             });
         },
         initFrame = function() {

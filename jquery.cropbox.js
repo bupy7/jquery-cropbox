@@ -36,7 +36,11 @@
         variants = [
             {
                 width: 200,
-                height: 200
+                height: 200,
+                minWidth: 200,
+                minHeight: 200,
+                maxWidth: 350,
+                maxHeight: 350
             }
         ],
         indexVariant = 0;
@@ -65,23 +69,23 @@
             // move frame
             $frame.on(EVENT_MOUSE_DOWN, frameMouseDown);
             $frame.on(EVENT_MOUSE_MOVE, frameMouseMove);
-            $frame.on(EVENT_MOUSE_UP, frameMouseUp);
+            $document.on(EVENT_MOUSE_UP, frameMouseUp);
+            // resize frame
+            $resize.on(EVENT_MOUSE_DOWN, resizeMouseDown);
+            $document.on(EVENT_MOUSE_MOVE, resizeMouseMove);
+            $document.on(EVENT_MOUSE_UP, resizeMouseUp);
             // move image
             $membrane.on(EVENT_MOUSE_DOWN, imageMouseDown);
             $membrane.on(EVENT_MOUSE_MOVE, imageMouseMove);
             $membrane.on(EVENT_MOUSE_UP, imageMouseUp);
             $membrane.on(EVENT_MOUSE_WHEEL, imageMouseWheel);
-            // resize frame
-            $resize.on(EVENT_MOUSE_DOWN, resizeMouseDown);
-            $document.on(EVENT_MOUSE_MOVE, resizeMouseMove);
-            $document.on(EVENT_MOUSE_UP, resizeMouseUp);
             // window resize
             $window.on(EVENT_RESIZE, resizeWorkarea);
             // select image file
             $inputFile.on(EVENT_CHANGE, function() {
                 var fileReader = new FileReader();
                 fileReader.readAsDataURL(this.files[0]);
-                $(fileReader).one('load', loadImage);
+                $(fileReader).one(EVENT_LOAD, loadImage);
             });
         },
         initFrame = function() {
@@ -96,9 +100,9 @@
                 backgroundImage: 'url("' + sourceImage.src + '")',
                 backgroundSize: $image.width() + 'px ' + $image.height() + 'px'
             });
-            refrashFrame(left, top);    
+            refrashPosFrame(left, top);    
         },
-        refrashFrame = function(left, top) {
+        refrashPosFrame = function(left, top) {
             var imgLeft = $image.position().left,
                 imgTop = $image.position().top,
                 x = imgLeft - left,
@@ -123,6 +127,19 @@
                 backgroundPosition: x + 'px ' + y + 'px'
             });
         },
+        refrashSizeFrame = function(width, height) {
+            var imgLeft = $image.position().left,
+                imgTop = $image.position().top,
+                frameLeft = $frame.position().left,
+                frameTop = $frame.position().top;
+            if ($image.width() + imgLeft < frameLeft + width) {
+                width = $image.width() + imgLeft - frameLeft;
+            }
+            if ($image.height() + imgTop < frameTop + height) {   
+                height = $image.height() + imgTop - frameTop;
+            }
+            $frame.css({width: width, height: height});
+        },
         frameMouseDown = function(event) {
             frameState.dragable = true;
             frameState.mouseX = event.clientX;
@@ -130,17 +147,17 @@
         },
         frameMouseMove = function(event) {
             if (frameState.dragable) {
-                var xOld = $frame.css('left'),
-                    yOld = $frame.css('top'),
-                    left = event.clientX - frameState.mouseX + parseInt(xOld),
-                    top = event.clientY - frameState.mouseY + parseInt(yOld);
+                var leftOld = $frame.position().left,
+                    topOld = $frame.position().top,
+                    left = event.clientX - frameState.mouseX + leftOld,
+                    top = event.clientY - frameState.mouseY + topOld;
 
                 frameState.mouseX = event.clientX;
                 frameState.mouseY = event.clientY;
-                refrashFrame(left, top);
+                refrashPosFrame(left, top);
             }
         },
-        frameMouseUp = function(event) {
+        frameMouseUp = function() {
             frameState.dragable = false;
         },
         resizeMouseDown = function(event) {
@@ -159,7 +176,7 @@
 
                 resizeState.mouseX = event.clientX;
                 resizeState.mouseY = event.clientY;
-                $frame.css({width: width, height: height});
+                refrashSizeFrame(width, height);
             }
         },
         resizeMouseUp = function(event) {
@@ -174,10 +191,10 @@
         },
         imageMouseMove = function(event) {
             if (imageState.dragable) {
-                var xOld = $image.css('left'),
-                    yOld = $image.css('top'),
-                    left = event.clientX - imageState.mouseX + parseInt(xOld),
-                    top = event.clientY - imageState.mouseY + parseInt(yOld);
+                var leftOld = $image.position().left,
+                    topOld = $image.position().top,
+                    left = event.clientX - imageState.mouseX + leftOld,
+                    top = event.clientY - imageState.mouseY + topOld;
 
                 imageState.mouseX = event.clientX;
                 imageState.mouseY = event.clientY;
@@ -185,10 +202,10 @@
 
                 frameState.mouseX = event.clientX;
                 frameState.mouseY = event.clientY;
-                refrashFrame(parseInt($frame.css('left')), parseInt($frame.css('top')));
+                refrashPosFrame($frame.position().left, $frame.position().top);
             }
         },
-        imageMouseUp = function(event) {
+        imageMouseUp = function() {
             imageState.dragable = false;
         },
         refrashImage = function(left, top) {
@@ -197,7 +214,9 @@
         loadImage = function(event) {
             $(sourceImage).one(EVENT_LOAD, function() {
                 $image.one(EVENT_LOAD, function() {
-                    refrashImage('auto', 'auto');
+                    var left = sourceImage.width / 2 - $workarea.width() / 2,
+                        top = sourceImage.height / 2 - $workarea.height() / 2;
+                    refrashImage(-left, -top);
                     initFrame();  
                 });
                 $image.attr('src', this.src);
@@ -205,7 +224,11 @@
             sourceImage.src = event.target.result;
         },
         resizeWorkarea = function() { 
-            refrashFrame(parseInt($frame.css('left')), parseInt($frame.css('top')));
+            var left = sourceImage.width / 2 - $workarea.width() / 2,
+                top = sourceImage.height / 2 - $workarea.height() / 2;
+            refrashImage(-left, -top);
+            resetRatio();
+            initFrame();
         },
         imageMouseWheel = function(event) {
             if (event.deltaY > 0) {              
@@ -220,7 +243,7 @@
             var width = sourceImage.width * ratio,
                 height = sourceImage.height * ratio;
             zoom(width, height);
-            refrashFrame(parseInt($frame.css('left')), parseInt($frame.css('top')));
+            refrashPosFrame($frame.position().left, $frame.position().top);
         },
         zoomOut = function() {
             var oldRatio = ratio;
@@ -229,7 +252,7 @@
                 height = sourceImage.height * ratio;
             if (width >= $frame.width() && height >= $frame.height()) {
                 zoom(width, height);
-                refrashFrame(parseInt($frame.css('left')), parseInt($frame.css('top')));
+                refrashPosFrame($frame.position().left, $frame.position().top);
             } else {
                 ratio = oldRatio;
             }

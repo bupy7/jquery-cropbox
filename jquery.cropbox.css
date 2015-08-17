@@ -9,7 +9,6 @@
     border: 1px solid #aaa;
     overflow: hidden;
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC");
-    text-align: center;
 }
 .membrane-cropbox {
     background-color: rgba(0, 0, 0, 0.5);
@@ -23,7 +22,7 @@
 .frame-cropbox {
     position: absolute;
     box-sizing: border-box;
-    outline: 1px solid #999;
+    outline: 2px solid #999;
     cursor: move;
     overflow: hidden;
     background-repeat: no-repeat;

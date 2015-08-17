@@ -1,16 +1,16 @@
 /**
  * Cropbox module of jQuery. A lightweight and simple plugin to crop your image. 
- *  
- *   |--|
- *   |__|
- *   |  |
- *  /    \
- * /      \
- * |      |
- * |ВОДКА |
- * |      |
- * |      |
- * |______| From Russia with love. 8)
+ *    ___
+ *   |   |
+ *   |---|
+ *   |   |
+ *  /     \
+ * /       \
+ * |       |
+ * | ВОДКА |
+ * |       |
+ * |       |
+ * |_______| From Russia with love.
  * 
  * Belosludcev Vasilij https://github.com/bupy7
  * Homepage: https://github.com/bupy7/jquery-cropbox
@@ -28,7 +28,7 @@
         EVENT_LOAD = 'load';
     // public properties
     var $th = null,
-        $inputInfo = null,
+        $inputData = null,
         $frame = null,
         $image = null,
         $workarea = null,
@@ -61,7 +61,7 @@
                 variants = options.variants || variants;
                 $th = $(this); 
                 $inputFile = $(options.selectors.inputFile);
-                $inputInfo = $(options.selectors.inputInfo);   
+                $inputData = $(options.selectors.inputData);   
                 $btnReset = $(options.selectors.btnReset);
                 $btnCrop = $(options.selectors.btnCrop);
                 initComponents();
@@ -100,18 +100,15 @@
             });
         },
         initFrame = function() {
-            resetRatio();
-            var left = $workarea.width() / 2 - variants[indexVariant].width / 2,
-                top = $workarea.height() / 2 - variants[indexVariant].height / 2;
+            var variant = variants[indexVariant],
+                left = $workarea.width() / 2 - variant.width / 2,
+                top = $workarea.height() / 2 - variant.height / 2;
             $frame.css({
-                width: variants[indexVariant].width,
-                height: variants[indexVariant].height,
-                left: left,
-                top: top,
-                backgroundImage: 'url("' + sourceImage.src + '")',
-                backgroundSize: $image.width() + 'px ' + $image.height() + 'px'
+                width: variant.width,
+                height: variant.height,
+                backgroundImage: 'url("' + sourceImage.src + '")'
             });
-            refrashPosFrame(left, top);    
+            refrashPosFrame(left, top);
         },
         refrashPosFrame = function(left, top) {
             var imgLeft = $image.position().left,
@@ -236,20 +233,21 @@
         loadImage = function(event) {
             $(sourceImage).one(EVENT_LOAD, function() {
                 $image.one(EVENT_LOAD, function() {
-                    var left = sourceImage.width / 2 - $workarea.width() / 2,
-                        top = sourceImage.height / 2 - $workarea.height() / 2;
-                    refrashImage(-left, -top);
-                    initFrame();  
+                    initRatio();
+                    var left = $image.width() / 2 - $workarea.width() / 2,
+                        top = $image.height() / 2 - $workarea.height() / 2;
+                    refrashImage(-left, -top);                    
+                    initFrame(); 
                 });
                 $image.attr('src', this.src);
             });
             sourceImage.src = event.target.result;
         },
         resizeWorkarea = function() { 
-            var left = sourceImage.width / 2 - $workarea.width() / 2,
-                top = sourceImage.height / 2 - $workarea.height() / 2;
-            refrashImage(-left, -top);
-            resetRatio();
+            initRatio();
+            var left = $image.width() / 2 - $workarea.width() / 2,
+                top = $image.height() / 2 - $workarea.height() / 2;
+            refrashImage(-left, -top);           
             initFrame();
         },
         imageMouseWheel = function(event) {
@@ -283,10 +281,11 @@
             $image.css({width: width, height: height});
             $frame.css({backgroundSize: width + 'px ' + height + 'px'});
         },
-        resetRatio = function() {
-            if ($frame.width() > sourceImage.width || $frame.height() > sourceImage.height) {
-                var wRatio = $frame.width() / sourceImage.width,
-                    hRatio = $frame.height() / sourceImage.height;
+        initRatio = function() {
+            var variant = variants[indexVariant];
+            if (variant.width > sourceImage.width || variant.height > sourceImage.height) {
+                var wRatio = variant.width / sourceImage.width,
+                    hRatio = variant.height / sourceImage.height;
                 if (wRatio > hRatio) {
                     ratio = wRatio;
                 } else {

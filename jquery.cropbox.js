@@ -7,6 +7,15 @@
  */
 "use strict";
 (function ($) {
+    // const
+    var EVENT_MOUSE_DOWN = 'mousedown',
+        EVENT_MOUSE_MOVE = 'mousemove',
+        EVENT_MOUSE_UP = 'mouseup',
+        EVENT_MOUSE_WHEEL = 'mousewheel',
+        EVENT_RESIZE = 'resize',
+        EVENT_CHANGE = 'change',
+        EVENT_LOAD = 'load';
+    // public properties
     var $th = null,
         $inputInfo = null,
         $frame = null,
@@ -30,8 +39,9 @@
                 height: 200
             }
         ],
-        indexVariant = 0,
-        methods = {
+        indexVariant = 0;
+    // public methods
+    var methods = {
             init: function(options) {
                 variants = options.variants || variants;
                 $th = $(this); 
@@ -42,8 +52,9 @@
                 initComponents();
                 initEvents();
             }
-        },
-        initComponents = function() {
+        };
+    // private methods
+    var initComponents = function() {
             $image = $th.find('.image-cropbox');
             $frame = $th.find('.frame-cropbox');
             $workarea = $th.find('.workarea-cropbox');
@@ -51,22 +62,23 @@
             $resize = $th.find('.resize-cropbox');
         },
         initEvents = function() {
-            $frame.on('mousedown', frameMouseDown);
-            $frame.on('mousemove', frameMouseMove);
-            $frame.on('mouseup', frameMouseUp);
-
-            $membrane.on('mousedown', imageMouseDown);
-            $membrane.on('mousemove', imageMouseMove);
-            $membrane.on('mouseup', imageMouseUp);
-            $membrane.on('mousewheel', imageMouseWheel);
-            
-            $resize.on('mousedown', resizeMouseDown);
-            $resize.on('mousemove mouseleave', resizeMouseMove);
-            $document.on('mouseup', resizeMouseUp);
-
-            $window.on('resize', resizeWorkarea);
-            
-            $inputFile.on('change', function() {
+            // move frame
+            $frame.on(EVENT_MOUSE_DOWN, frameMouseDown);
+            $frame.on(EVENT_MOUSE_MOVE, frameMouseMove);
+            $frame.on(EVENT_MOUSE_UP, frameMouseUp);
+            // move image
+            $membrane.on(EVENT_MOUSE_DOWN, imageMouseDown);
+            $membrane.on(EVENT_MOUSE_MOVE, imageMouseMove);
+            $membrane.on(EVENT_MOUSE_UP, imageMouseUp);
+            $membrane.on(EVENT_MOUSE_WHEEL, imageMouseWheel);
+            // resize frame
+            $resize.on(EVENT_MOUSE_DOWN, resizeMouseDown);
+            $document.on(EVENT_MOUSE_MOVE, resizeMouseMove);
+            $document.on(EVENT_MOUSE_UP, resizeMouseUp);
+            // window resize
+            $window.on(EVENT_RESIZE, resizeWorkarea);
+            // select image file
+            $inputFile.on(EVENT_CHANGE, function() {
                 var fileReader = new FileReader();
                 fileReader.readAsDataURL(this.files[0]);
                 $(fileReader).one('load', loadImage);
@@ -139,8 +151,6 @@
             resizeState.mouseY = event.clientY;
         },
         resizeMouseMove = function(event) {
-            event.stopImmediatePropagation();
-
             if (resizeState.dragable) {
                 var widthOld = $frame.width(),
                     heightOld = $frame.height(),
@@ -185,8 +195,8 @@
             $image.css({left: left, top: top});
         },
         loadImage = function(event) {
-            $(sourceImage).one('load', function() {
-                $image.one('load', function() {
+            $(sourceImage).one(EVENT_LOAD, function() {
+                $image.one(EVENT_LOAD, function() {
                     refrashImage('auto', 'auto');
                     initFrame();  
                 });

@@ -8,16 +8,18 @@
 "use strict";
 (function ($) {
     var $th = null,
-        $cropInfoInput = null,
+        $inputInfo = null,
         $frame = null,
         $image = null,
         $workarea = null,
         $membrane = null,
         $btnReset = null,
         $btnCrop = null,
-        $file = null,
+        $inputFile = null,
+        $resize = null,
         frameState = {},
         imageState = {},
+        resizeState = {},
         sourceImage = new Image,
         ratio = 1,
         variants = [
@@ -29,11 +31,12 @@
         indexVariant = 0,
         methods = {
             init: function(options) {
-                $th = $(this); 
                 variants = options.variants || variants;
-                $cropInfoInput = $th.find(options.cropInfoSelector);   
-                $btnReset = $th.find(options.btnResetSelector);
-                $btnCrop = $th.find(options.btnCropSelector);
+                $th = $(this); 
+                $inputFile = $(options.selectors.inputFile);
+                $inputInfo = $(options.selectors.inputInfo);   
+                $btnReset = $(options.selectors.btnReset);
+                $btnCrop = $(options.selectors.btnCrop);
                 initComponents();
                 initEvents();
             }
@@ -43,7 +46,7 @@
             $frame = $th.find('.frame-cropbox');
             $workarea = $th.find('.workarea-cropbox');
             $membrane = $th.find('.membrane-cropbox');
-            $file = $th.find('input[type="file"]');
+            $resize = $th.find('.resize-cropbox');
         },
         initEvents = function() {
             $frame.on('mousedown', frameMouseDown);
@@ -54,10 +57,14 @@
             $membrane.on('mousemove', imageMouseMove);
             $membrane.on('mouseup', imageMouseUp);
             $membrane.on('mousewheel', imageMouseWheel);
+            
+            $resize.on('mousedown', resizeMouseDown);
+            $resize.on('mousemove mouseleave', resizeMouseMove);
+            $(document).on('mouseup', resizeMouseUp);
 
             $(window).on('resize', resizeWorkarea);
             
-            $file.on('change', function() {
+            $inputFile.on('change', function() {
                 var fileReader = new FileReader();
                 fileReader.readAsDataURL(this.files[0]);
                 $(fileReader).one('load', loadImage);
@@ -103,14 +110,14 @@
             });
         },
         frameMouseDown = function(event) {
-            event.stopImmediatePropagation();    
+            //event.stopImmediatePropagation();    
 
             frameState.dragable = true;
             frameState.mouseX = event.clientX;
             frameState.mouseY = event.clientY;
         },
         frameMouseMove = function(event) {
-            event.stopImmediatePropagation();
+            //event.stopImmediatePropagation();
 
             if (frameState.dragable) {
                 var xOld = $frame.css('left'),
@@ -124,20 +131,40 @@
             }
         },
         frameMouseUp = function(event) {
-            event.stopImmediatePropagation();    
-
             frameState.dragable = false;
         },
-        imageMouseDown = function(event) {
+        resizeMouseDown = function(event) {
             event.stopImmediatePropagation();    
 
+            resizeState.dragable = true;
+            resizeState.mouseX = event.clientX;
+            resizeState.mouseY = event.clientY;
+        },
+        resizeMouseMove = function(event) {
+            event.stopImmediatePropagation();
+
+            if (resizeState.dragable) {
+                var widthOld = $frame.width(),
+                    heightOld = $frame.height(),
+                    width = event.clientX - resizeState.mouseX + widthOld,
+                    height = event.clientY - resizeState.mouseY + heightOld;
+
+                resizeState.mouseX = event.clientX;
+                resizeState.mouseY = event.clientY;
+                $frame.css({width: width, height: height});
+            }
+        },
+        resizeMouseUp = function(event) {
+            event.stopImmediatePropagation();    
+
+            resizeState.dragable = false;
+        },
+        imageMouseDown = function(event) {
             imageState.dragable = true;
             imageState.mouseX = event.clientX;
             imageState.mouseY = event.clientY;
         },
         imageMouseMove = function(event) {
-            event.stopImmediatePropagation();
-
             if (imageState.dragable) {
                 var xOld = $image.css('left'),
                     yOld = $image.css('top'),
@@ -154,8 +181,6 @@
             }
         },
         imageMouseUp = function(event) {
-            event.stopImmediatePropagation();    
-
             imageState.dragable = false;
         },
         refrashImage = function(left, top) {

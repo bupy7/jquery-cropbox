@@ -1,5 +1,16 @@
 /**
  * Cropbox module of jQuery. A lightweight and simple plugin to crop your image. 
+ *  
+ *   |--|
+ *   |__|
+ *   |  |
+ *  /    \
+ * /      \
+ * |      |
+ * |ВОДКА |
+ * |      |
+ * |      |
+ * |______| From Russia with love. 8)
  * 
  * Belosludcev Vasilij https://github.com/bupy7
  * Homepage: https://github.com/bupy7/jquery-cropbox
@@ -131,7 +142,18 @@
             var imgLeft = $image.position().left,
                 imgTop = $image.position().top,
                 frameLeft = $frame.position().left,
-                frameTop = $frame.position().top;
+                frameTop = $frame.position().top,
+                variant = variants[indexVariant];
+            if (width > variant.maxWidth) {
+                width = variant.maxWidth;
+            } else if (width < variant.minWidth) {
+                width = variant.minWidth;
+            }
+            if (height > variant.maxHeight) {
+                height = variant.maxHeight;
+            } else if (height < variant.minHeight) {
+                height = variant.minHeight;
+            }
             if ($image.width() + imgLeft < frameLeft + width) {
                 width = $image.width() + imgLeft - frameLeft;
             }

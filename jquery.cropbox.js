@@ -13,7 +13,7 @@
  * |_______| From Russia with love.
  * 
  * Belosludcev Vasilij https://github.com/bupy7
- * Homepage: https://github.com/bupy7/jquery-cropbox
+ * Homepage of extension: https://github.com/bupy7/jquery-cropbox
  * v1.0.0
  */
 "use strict";

@@ -150,6 +150,7 @@
                     })
                 )
             );
+            nextVariant();
         },
         initFrame = function() {
             var variant = getCurrentVariant(),
@@ -192,19 +193,38 @@
                 imgTop = $image.position().top,
                 frameLeft = $frame.position().left,
                 frameTop = $frame.position().top,
-                variant = getCurrentVariant();
-            if (width > variant.maxWidth) {
-                width = variant.maxWidth;
-            } else if (width < variant.minWidth) {
-                width = variant.minWidth;
+                frameWidth = $frame.width(),
+                frameHeight = $frame.height(),
+                variant = getCurrentVariant(),
+                maxWidth = variant.maxWidth,
+                maxHeight = variant.maxHeight,
+                minWidth = variant.minWidth,
+                minHeight = variant.minHeight;
+            // set max width and min width
+            if (width > frameWidth && typeof maxWidth == 'undefined') {
+                maxWidth = frameWidth;
+            } else if (width < frameWidth && typeof minWidth == 'undefined') {
+                minWidth = frameWidth;
             }
-            if (height > variant.maxHeight) {
-                height = variant.maxHeight;
-            } else if (height < variant.minHeight) {
-                height = variant.minHeight;
+            if (height > frameHeight && typeof maxHeight == 'undefined') {
+                maxHeight = frameHeight;
+            } else if (height < frameHeight && typeof minHeight == 'undefined') {
+                minHeight = frameHeight;
+            }
+            // check max and min width
+            if (width > maxWidth) {
+                width = maxWidth;
+            } else if (width < minWidth) {
+                width = minWidth;
             }
             if ($image.width() + imgLeft < frameLeft + width) {
                 width = $image.width() + imgLeft - frameLeft;
+            }
+            // check max and min height
+            if (height > maxHeight) {
+                height = maxHeight;
+            } else if (height < minHeight) {
+                height = minHeight;
             }
             if ($image.height() + imgTop < frameTop + height) {   
                 height = $image.height() + imgTop - frameTop;
@@ -233,7 +253,7 @@
         },
         resizeMouseDown = function(event) {
             event.stopImmediatePropagation();    
-
+            
             resizeState.dragable = true;
             resizeState.mouseX = event.clientX;
             resizeState.mouseY = event.clientY;
@@ -282,6 +302,11 @@
         refrashImage = function(left, top) {
             $image.css({left: left, top: top});
         },
+        initImage = function() {
+            var left = $image.width() / 2 - $workarea.width() / 2,
+                top = $image.height() / 2 - $workarea.height() / 2;                   
+            refrashImage(-left, -top); 
+        },
         loadImage = function(event) {
             $(sourceImage).one(EVENT_LOAD, function() {
                 $image.one(EVENT_LOAD, start);
@@ -291,9 +316,7 @@
         },
         resizeWorkarea = function() { 
             initRatio();
-            var left = $image.width() / 2 - $workarea.width() / 2,
-                top = $image.height() / 2 - $workarea.height() / 2;
-            refrashImage(-left, -top);           
+            initImage();
             initFrame();
         },
         imageMouseWheel = function(event) {
@@ -354,6 +377,18 @@
         getCurrentVariant = function() {
             return variants[indexVariant];
         },
+        nextVariant = function() {
+            if (variants.length <= indexVariant + 1) {
+                indexVariant = 0;
+                stop();
+                return false;
+            }
+            ++indexVariant;
+            initRatio();
+            initImage();
+            initFrame();
+            return true;
+        },
         setCropInfo = function(value) {
             $inputCropInfo.val(JSON.stringify(value));
         },
@@ -373,11 +408,12 @@
             setCropInfo([]);
             resetVariant();
             showWorkarea();
-            initRatio();
-            var left = $image.width() / 2 - $workarea.width() / 2,
-                top = $image.height() / 2 - $workarea.height() / 2;                   
-            refrashImage(-left, -top); 
+            initRatio();                   
+            initImage(); 
             initFrame();
+        },
+        stop = function() {
+            hideWorkarea();
         };
         
     $.fn.cropbox = function(options) {

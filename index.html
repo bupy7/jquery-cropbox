@@ -26,7 +26,22 @@
                 cursor: inherit;
                 display: block;
             }
+            .syntaxhighlighter table .container:before {
+                display: none !important;
+            }
+            footer {
+                margin-top: 10px;
+                border-top: #cdcdcd 1px solid;
+            }
         </style>
+        <link type="text/css" rel="stylesheet" href="/bower_components/SyntaxHighlighter/styles/shCore.css">
+        <link type="text/css" rel="stylesheet" href="/bower_components/SyntaxHighlighter/styles/shThemeDefault.css">
+        <script type="text/javascript" src="/bower_components/SyntaxHighlighter/scripts/XRegExp.js"></script>
+        <script type="text/javascript" src="/bower_components/SyntaxHighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="/bower_components/SyntaxHighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="/bower_components/SyntaxHighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript" src="/bower_components/SyntaxHighlighter/scripts/shBrushCss.js"></script>
+        <script type="text/javascript">SyntaxHighlighter.all();</script>
     </head>
     <body>
         <nav class="navbar navbar-default">
@@ -95,39 +110,100 @@
                     <textarea class="data form-control" rows="5"></textarea>
                 </div>
             </div>
-            <h2>Example settings</h2>
-            <pre>$('#plugin').cropbox({
-                selectors: {
-                    inputCropInfo: '#plugin textarea.data',
-                    inputFile: '#plugin input[type="file"]',
-                    btnCrop: '#plugin .btn-crop',
-                    btnReset: '#plugin .btn-reset',
-                    resultContainer: '#plugin .cropped .panel-body',
-                    messageBlock: '#message'
-                },
-                imageResultOptions: {
-                    class: 'img-thumbnail',
-                    style: 'margin-right: 5px; margin-bottom: 5px'
-                },
-                variants: [
-                    {
-                        width: 200,
-                        height: 200,
-                        minWidth: 180,
-                        minHeight: 200,
-                        maxWidth: 350,
-                        maxHeight: 350
-                    },
-                    {
-                        width: 150,
-                        height: 200
-                    }
-                ],
-                messages: [
-                    'Crop a middle image.',
-                    'Crop a small image.'
-                ]
-            });</pre>
+            <h2>Source code of example</h2>
+            <h4>CSS</h4>
+<pre class="brush: css;">
+div.cropbox .btn-file {
+    position: relative;
+    overflow: hidden;
+}
+div.cropbox .btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+</pre>
+            <h4>HTML</h4>
+<pre class="brush: html;">
+<div id="message" class="alert alert-info"></div> 
+<div id="plugin" class="cropbox">
+    <div class="workarea-cropbox">
+        <div class="bg-cropbox">
+            <img class="image-cropbox">
+            <div class="membrane-cropbox"></div>
+        </div>
+        <div class="frame-cropbox">
+            <div class="resize-cropbox"></div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <span class="btn btn-primary btn-file">
+            <i class="glyphicon glyphicon-folder-open"></i>
+            Browse <input type="file" accept="image/*">
+        </span>
+        <button type="button" class="btn btn-success btn-crop">
+            <i class="glyphicon glyphicon-scissors"></i> Crop
+        </button>
+        <button type="button" class="btn btn-warning btn-reset">
+            <i class="glyphicon glyphicon-repeat"></i> Reset
+        </button>
+    </div>
+    <h3></h3>
+    <div class="cropped panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Result of cropping</h3></div>
+        <div class="panel-body">...</div>
+    </div>
+    <div class="form-group">
+        <label>Info of cropping</label>
+        <textarea class="data form-control" rows="5"></textarea>
+    </div>
+</div>
+</pre>
+            <h4>JS</h4>
+<pre class="brush: js;">
+$('#plugin').cropbox({
+    selectors: {
+        inputCropInfo: '#plugin textarea.data',
+        inputFile: '#plugin input[type="file"]',
+        btnCrop: '#plugin .btn-crop',
+        btnReset: '#plugin .btn-reset',
+        resultContainer: '#plugin .cropped .panel-body',
+        messageBlock: '#message'
+    },
+    imageResultOptions: {
+        class: 'img-thumbnail',
+        style: 'margin-right: 5px; margin-bottom: 5px'
+    },
+    variants: [
+        {
+            width: 200,
+            height: 200,
+            minWidth: 180,
+            minHeight: 200,
+            maxWidth: 350,
+            maxHeight: 350
+        },
+        {
+            width: 150,
+            height: 200
+        }
+    ],
+    messages: [
+        'Crop a middle image.',
+        'Crop a small image.'
+    ]
+});
+</pre>
         </div>
         <script src="/bower_components/jquery/dist/jquery.min.js"></script>
         <script src="/bower_components/jquery-mousewheel/jquery.mousewheel.js"></script>
@@ -167,5 +243,8 @@
                 ]
             });
         </script>
+        <footer>
+            <p class="text-center">&copy; jQuery-Cropbox 2015</p>
+        </footer>
     </body>
 </html>

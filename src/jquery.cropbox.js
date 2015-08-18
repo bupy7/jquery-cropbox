@@ -1,5 +1,6 @@
 /**
- * Cropbox module of jQuery. A lightweight and simple plugin to crop your image. 
+ * jQuery-Cropbox. 
+ * A lightweight and simple plugin to crop your image. 
  *    ___
  *   |   |
  *   |---|

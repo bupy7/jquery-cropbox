@@ -3,6 +3,7 @@
 .workarea-cropbox {
     position: relative;
     overflow: hidden;
+    display: none;
 }
 .bg-cropbox {
     position: relative;

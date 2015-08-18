@@ -27,19 +27,13 @@
         EVENT_CHANGE = 'change',
         EVENT_LOAD = 'load',
         EVENT_CLICK = 'click';
-    // public properties
+    // protected properties
     var $th = null,
-        $inputData = null,
         $frame = null,
         $image = null,
         $workarea = null,
         $membrane = null,
-        $btnReset = null,
-        $btnCrop = null,
-        $inputFile = null,
         $resize = null,
-        $resultCrop = null,
-        imageResultOptions = {},
         frameState = {},
         imageState = {},
         resizeState = {},
@@ -47,6 +41,15 @@
         $document = $(document),
         $window = $(window),
         ratio = 1,
+        indexVariant = 0,
+        $backupResultContainer = null,
+        // options of plugin
+        $inputFile = null,
+        $btnReset = null,
+        $btnCrop = null,
+        $resultContainer = null,
+        $inputCropInfo = null,
+        imageOptions = {},
         variants = [
             {
                 width: 200,
@@ -56,8 +59,7 @@
                 maxWidth: 350,
                 maxHeight: 350
             }
-        ],
-        indexVariant = 0;
+        ];
     // public methods
     var methods = {
             init: function(options) {
@@ -65,17 +67,27 @@
                 // merge options
                 variants = options.variants || variants; 
                 $inputFile = $(options.selectors.inputFile);
-                $inputData = $(options.selectors.inputData);   
+                $inputCropInfo = $(options.selectors.inputCropInfo);   
                 $btnReset = $(options.selectors.btnReset);
                 $btnCrop = $(options.selectors.btnCrop);
-                $resultCrop = $(options.selectors.resultCrop);
-                imageResultOptions = options.imageResultOptions || imageResultOptions;
+                $resultContainer = $(options.selectors.resultContainer);
+                imageOptions = options.imageResultOptions || imageOptions;
                 // initialize plugin
+                $backupResultContainer = $resultContainer.clone();
                 initComponents();
                 initEvents();
+            },
+            reset: function() {
+                $resultContainer.html($backupResultContainer.html());
+                $inputCropInfo.val('');
+                resetVariant();
+                hideWorkarea();
+            },
+            emptyResultContainer: function() {
+                $resultContainer.empty();
             }
         };
-    // private methods
+    // protected methods
     var initComponents = function() {
             $image = $th.find('.image-cropbox');
             $frame = $th.find('.frame-cropbox');
@@ -103,6 +115,8 @@
             $inputFile.on(EVENT_CHANGE, selectFromFile);
             // crop image
             $btnCrop.on(EVENT_CLICK, cropImage);
+            // reset button
+            $btnReset.on(EVENT_CLICK, methods.reset);
         },
         selectFromFile = function() {
             var fileReader = new FileReader();
@@ -126,17 +140,17 @@
                     $image.width(),
                     $image.height()
                 );
-            $resultCrop.append(
+            $resultContainer.append(
                 $(
                     '<img>', 
-                    $.extend(imageResultOptions, {
+                    $.extend(imageOptions, {
                         src: canvas.toDataURL('image/png')
                     })
                 )
             );
         },
         initFrame = function() {
-            var variant = variants[indexVariant],
+            var variant = getCurrentVariant(),
                 left = $workarea.width() / 2 - variant.width / 2,
                 top = $workarea.height() / 2 - variant.height / 2;
             $frame.css({
@@ -176,7 +190,7 @@
                 imgTop = $image.position().top,
                 frameLeft = $frame.position().left,
                 frameTop = $frame.position().top,
-                variant = variants[indexVariant];
+                variant = getCurrentVariant();
             if (width > variant.maxWidth) {
                 width = variant.maxWidth;
             } else if (width < variant.minWidth) {
@@ -269,10 +283,12 @@
         loadImage = function(event) {
             $(sourceImage).one(EVENT_LOAD, function() {
                 $image.one(EVENT_LOAD, function() {
+                    methods.emptyResultContainer();
+                    showWorkarea();
                     initRatio();
                     var left = $image.width() / 2 - $workarea.width() / 2,
-                        top = $image.height() / 2 - $workarea.height() / 2;
-                    refrashImage(-left, -top);                    
+                        top = $image.height() / 2 - $workarea.height() / 2;                   
+                    refrashImage(-left, -top); 
                     initFrame(); 
                 });
                 $image.attr('src', this.src);
@@ -318,7 +334,7 @@
             $frame.css({backgroundSize: width + 'px ' + height + 'px'});
         },
         initRatio = function() {
-            var variant = variants[indexVariant];
+            var variant = getCurrentVariant();
             if (variant.width > sourceImage.width || variant.height > sourceImage.height) {
                 var wRatio = variant.width / sourceImage.width,
                     hRatio = variant.height / sourceImage.height;
@@ -331,6 +347,21 @@
                 ratio = 1;
             }
             zoom(sourceImage.width * ratio, sourceImage.height * ratio);
+        },
+        showWorkarea = function() {
+            $workarea.fadeIn();
+        },
+        hideWorkarea = function() {
+            $workarea.fadeOut();
+        },
+        resetVariant = function() {
+            indexVariant = 0;
+        },
+        getCurrentVariant = function() {
+            return variants[indexVariant];
+        },
+        setDataInfo = function() {
+            
         };
         
     $.fn.cropbox = function(options) {

@@ -75,6 +75,7 @@
                 // initialize plugin
                 $backupResultContainer = $resultContainer.clone();
                 initComponents();
+                disableControls();
                 initEvents();
             }
         };
@@ -402,6 +403,7 @@
             $inputCropInfo.val([]);
             resetVariant();
             hideWorkarea();
+            disableControls();
         },
         start = function() {
             $resultContainer.empty();
@@ -411,9 +413,17 @@
             initRatio();                   
             initImage(); 
             initFrame();
+            enableControls();
         },
         stop = function() {
             hideWorkarea();
+            disableControls();
+        },
+        disableControls = function() {
+            $btnCrop.prop('disabled', true);
+        },
+        enableControls = function() {
+            $btnCrop.prop('disabled', false);
         };
         
     $.fn.cropbox = function(options) {

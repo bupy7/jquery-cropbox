@@ -25,7 +25,8 @@
         EVENT_MOUSE_WHEEL = 'mousewheel',
         EVENT_RESIZE = 'resize',
         EVENT_CHANGE = 'change',
-        EVENT_LOAD = 'load';
+        EVENT_LOAD = 'load',
+        EVENT_CLICK = 'click';
     // public properties
     var $th = null,
         $inputData = null,
@@ -37,7 +38,8 @@
         $btnCrop = null,
         $inputFile = null,
         $resize = null,
-        $cropped = null,
+        $resultCrop = null,
+        imageResultOptions = {},
         frameState = {},
         imageState = {},
         resizeState = {},
@@ -59,12 +61,16 @@
     // public methods
     var methods = {
             init: function(options) {
-                variants = options.variants || variants;
-                $th = $(this); 
+                $th = $(this);
+                // merge options
+                variants = options.variants || variants; 
                 $inputFile = $(options.selectors.inputFile);
                 $inputData = $(options.selectors.inputData);   
                 $btnReset = $(options.selectors.btnReset);
                 $btnCrop = $(options.selectors.btnCrop);
+                $resultCrop = $(options.selectors.resultCrop);
+                imageResultOptions = options.imageResultOptions || imageResultOptions;
+                // initialize plugin
                 initComponents();
                 initEvents();
             }
@@ -76,7 +82,6 @@
             $workarea = $th.find('.workarea-cropbox');
             $membrane = $th.find('.membrane-cropbox');
             $resize = $th.find('.resize-cropbox');
-            $cropped = $th.find('.cropped-cropbox');
         },
         initEvents = function() {
             // move frame
@@ -94,39 +99,41 @@
             $membrane.on(EVENT_MOUSE_WHEEL, imageMouseWheel);
             // window resize
             $window.on(EVENT_RESIZE, resizeWorkarea);
-            // TODO
-            // select image file
-            $inputFile.on(EVENT_CHANGE, function() {
-                var fileReader = new FileReader();
-                fileReader.readAsDataURL(this.files[0]);
-                $(fileReader).one(EVENT_LOAD, loadImage);
-            });
-            // TODO
+            // select image from file
+            $inputFile.on(EVENT_CHANGE, selectFromFile);
             // crop image
-            $btnCrop.on('click', function() {
-                var width = $frame.width(),
-                    height = $frame.height(),
-                    x = $frame.position().left - $image.position().left,
-                    y = $frame.position().top - $image.position().top,
-                    canvas = $('<canvas />').attr({width: width, height: height})[0];
-                    canvas
-                        .getContext('2d')
-                        .drawImage(
-                            //$image[0], 
-                            x, 
-                            y,  
-                            canvas.width, 
-                            canvas.height,
-                            0,
-                            0,
-                            canvas.width,
-                            canvas.height
-                        );
-                $cropped.append($('<img>', {
-                    class: 'img-thumbnail',
-                    src: canvas.toDataURL('image/png')
-                }));
-            });
+            $btnCrop.on(EVENT_CLICK, cropImage);
+        },
+        selectFromFile = function() {
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(this.files[0]);
+            $(fileReader).one(EVENT_LOAD, loadImage);
+        },
+        cropImage = function() {
+            var x = $frame.position().left - $image.position().left,
+                y = $frame.position().top - $image.position().top,
+                canvas = $('<canvas/>').attr({width: $frame.width(), height: $frame.height()})[0];
+                canvas
+                .getContext('2d')
+                .drawImage(
+                    $image[0], 
+                    0, 
+                    0,  
+                    sourceImage.width, 
+                    sourceImage.height,
+                    -x,
+                    -y,
+                    $image.width(),
+                    $image.height()
+                );
+            $resultCrop.append(
+                $(
+                    '<img>', 
+                    $.extend(imageResultOptions, {
+                        src: canvas.toDataURL('image/png')
+                    })
+                )
+            );
         },
         initFrame = function() {
             var variant = variants[indexVariant],

@@ -76,15 +76,6 @@
                 $backupResultContainer = $resultContainer.clone();
                 initComponents();
                 initEvents();
-            },
-            reset: function() {
-                $resultContainer.html($backupResultContainer.html());
-                $inputCropInfo.val('');
-                resetVariant();
-                hideWorkarea();
-            },
-            emptyResultContainer: function() {
-                $resultContainer.empty();
             }
         };
     // protected methods
@@ -116,7 +107,7 @@
             // crop image
             $btnCrop.on(EVENT_CLICK, cropImage);
             // reset button
-            $btnReset.on(EVENT_CLICK, methods.reset);
+            $btnReset.on(EVENT_CLICK, reset);
         },
         selectFromFile = function() {
             var fileReader = new FileReader();
@@ -140,11 +131,22 @@
                     $image.width(),
                     $image.height()
                 );
+            var dImage = canvas.toDataURL('image/png');
+            addCropInfo({
+                sWidth: sourceImage.width,
+                sHeight: sourceImage.height,
+                x: x,
+                y: y,
+                dWidth: $image.width(),
+                dHeight: $image.height(),
+                ratio: ratio,
+                dImage: dImage
+            });
             $resultContainer.append(
                 $(
                     '<img>', 
                     $.extend(imageOptions, {
-                        src: canvas.toDataURL('image/png')
+                        src: dImage
                     })
                 )
             );
@@ -282,15 +284,7 @@
         },
         loadImage = function(event) {
             $(sourceImage).one(EVENT_LOAD, function() {
-                $image.one(EVENT_LOAD, function() {
-                    methods.emptyResultContainer();
-                    showWorkarea();
-                    initRatio();
-                    var left = $image.width() / 2 - $workarea.width() / 2,
-                        top = $image.height() / 2 - $workarea.height() / 2;                   
-                    refrashImage(-left, -top); 
-                    initFrame(); 
-                });
+                $image.one(EVENT_LOAD, start);
                 $image.attr('src', this.src);
             });
             sourceImage.src = event.target.result;
@@ -360,8 +354,30 @@
         getCurrentVariant = function() {
             return variants[indexVariant];
         },
-        setDataInfo = function() {
-            
+        setCropInfo = function(value) {
+            $inputCropInfo.val(JSON.stringify(value));
+        },
+        addCropInfo = function(value) {
+            var data = JSON.parse($inputCropInfo.val());
+            data.push(value);
+            $inputCropInfo.val(JSON.stringify(data));
+        },
+        reset = function() {
+            $resultContainer.html($backupResultContainer.html());
+            $inputCropInfo.val([]);
+            resetVariant();
+            hideWorkarea();
+        },
+        start = function() {
+            $resultContainer.empty();
+            setCropInfo([]);
+            resetVariant();
+            showWorkarea();
+            initRatio();
+            var left = $image.width() / 2 - $workarea.width() / 2,
+                top = $image.height() / 2 - $workarea.height() / 2;                   
+            refrashImage(-left, -top); 
+            initFrame();
         };
         
     $.fn.cropbox = function(options) {

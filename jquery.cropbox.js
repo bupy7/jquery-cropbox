@@ -77,7 +77,7 @@
                 messages = options.messages || messages;
                 $messageBlock = $(options.selectors.messageBlock);
                 // initialize plugin
-                $backupResultContainer = $resultContainer.clone();
+                initResultBackup();
                 initComponents();
                 disableControls();
                 hideMessage();
@@ -148,14 +148,7 @@
                 ratio: ratio,
                 dImage: dImage
             });
-            $resultContainer.append(
-                $(
-                    '<img>', 
-                    $.extend(imageOptions, {
-                        src: dImage
-                    })
-                )
-            );
+            addToContainer($('<img>', $.extend(imageOptions, {src: dImage})));
             if (nextVariant()) {
                 nextMessage();
             }
@@ -406,7 +399,7 @@
             $inputCropInfo.val(JSON.stringify(data));
         },
         reset = function() {
-            $resultContainer.html($backupResultContainer.html());
+            resultFromBackup();
             $inputCropInfo.val([]);
             resetVariant();
             hideWorkarea();
@@ -414,7 +407,7 @@
             hideMessage();
         },
         start = function() {
-            $resultContainer.empty();
+            emptyResultContainer();
             setCropInfo([]);
             resetVariant();
             showWorkarea();
@@ -443,6 +436,18 @@
         },
         hideMessage = function() {
             $messageBlock.hide();
+        },
+        initResultBackup = function() {
+            $backupResultContainer = $resultContainer.clone();
+        },
+        resultFromBackup = function() {
+            $resultContainer.html($backupResultContainer.html());
+        },
+        addToContainer = function(content) {
+            $resultContainer.append(content);  
+        },
+        emptyResultContainer = function() {
+            $resultContainer.empty();
         };
         
     $.fn.cropbox = function(options) {

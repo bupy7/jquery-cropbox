@@ -4,6 +4,7 @@
     position: relative;
     overflow: hidden;
     display: none;
+    margin-bottom: 10px;
 }
 .bg-cropbox {
     position: relative;
@@ -37,10 +38,6 @@
 .image-cropbox {
     position: relative;
 }
-div.cropbox .btn-group {
-    margin-bottom: 10px;
-    margin-bottom: 10px;
-}
 div.cropbox .btn-file {
     position: relative;
     overflow: hidden;
@@ -60,17 +57,6 @@ div.cropbox .btn-file input[type=file] {
     cursor: inherit;
     display: block;
 }
-/*div.cropbox .message {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}*/
-/*div.cropbox .cropped img {
-    display: block;
-    margin-bottom: 10px;
-}
-div.cropbox .cropped .btn {
-    margin-bottom: 10px;
-}*/
 .resize-cropbox {
     width: 16px;
     height: 16px;

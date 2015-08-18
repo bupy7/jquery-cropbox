@@ -49,6 +49,7 @@
         $btnCrop = null,
         $resultContainer = null,
         $inputCropInfo = null,
+        $messageBlock = null,
         imageOptions = {},
         variants = [
             {
@@ -59,7 +60,8 @@
                 maxWidth: 350,
                 maxHeight: 350
             }
-        ];
+        ],
+        messages = [];
     // public methods
     var methods = {
             init: function(options) {
@@ -72,10 +74,13 @@
                 $btnCrop = $(options.selectors.btnCrop);
                 $resultContainer = $(options.selectors.resultContainer);
                 imageOptions = options.imageResultOptions || imageOptions;
+                messages = options.messages || messages;
+                $messageBlock = $(options.selectors.messageBlock);
                 // initialize plugin
                 $backupResultContainer = $resultContainer.clone();
                 initComponents();
                 disableControls();
+                hideMessage();
                 initEvents();
             }
         };
@@ -151,7 +156,9 @@
                     })
                 )
             );
-            nextVariant();
+            if (nextVariant()) {
+                nextMessage();
+            }
         },
         initFrame = function() {
             var variant = getCurrentVariant(),
@@ -404,6 +411,7 @@
             resetVariant();
             hideWorkarea();
             disableControls();
+            hideMessage();
         },
         start = function() {
             $resultContainer.empty();
@@ -414,16 +422,27 @@
             initImage(); 
             initFrame();
             enableControls();
+            showMessage();
         },
         stop = function() {
             hideWorkarea();
             disableControls();
+            hideMessage();
         },
         disableControls = function() {
             $btnCrop.prop('disabled', true);
         },
         enableControls = function() {
             $btnCrop.prop('disabled', false);
+        },
+        nextMessage = function() {
+            $messageBlock.html(messages[indexVariant]);
+        },
+        showMessage = function() {
+            $messageBlock.html(messages[indexVariant]).show();
+        },
+        hideMessage = function() {
+            $messageBlock.hide();
         };
         
     $.fn.cropbox = function(options) {

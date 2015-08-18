@@ -1,5 +1,5 @@
 {
-    "name": "jquery-cropbox",
+    "name": "jq-cropbox",
     "version": "1.0.0",
     "homepage": "https://github.com/bupy7/jquery-cropbox",
     "authors": [
@@ -7,8 +7,10 @@
     ],
     "description": "A lightweight and simple plugin to crop your image.",
     "main": [
-        "jquery.cropbox.js",
-        "jquery.cropbox.css"
+        "dist/*.js",
+        "dist/*.css",
+        "src/*.js",
+        "src/*.css"
     ],
     "keywords": [
         "cropbox",

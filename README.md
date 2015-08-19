@@ -14,72 +14,9 @@ This Cropper can resize, zoom, move image before crop.
 bower install jq-cropbox#1.0.*
 ```
 
-# Options
+# Documentation
 
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Default</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>selectors</td>
-            <td>object</td>
-            <td>
-                Selectors of skeleton plugin
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Default</th>
-                            <th>Required</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>inputFile</td>
-                            <td>string</td>
-                            <td>Selector to input type of "file" for select image.</td>
-                            <td>-</td>
-                            <td>Yes</td>
-                        </tr>
-                        <tr>
-                            <td>inputInfo</td>
-                            <td>string</td>
-                            <td>
-                                Information about cropping image as JSON-string.
-                                
-                                Content information about:
-                                - sWidth: Width of source image.
-                                - sHeight: Height of source image.
-                                - x: X-coordinate start crop image.
-                                - y: Y-coordinate start crop image.
-                                - dWidth: Width of cropping image.
-                                - dHeight: Height of cropping image.
-                                - ratio: Ratio of cropping image.
-                                - width: Width of cropped image.
-                                - height: Height of cropped image.
-                                - image: Cropped image as base64 string.
-                            </td>
-                            <td>-</td>
-                            <td>Yes</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td>-</td>
-            <td>Yes</td>
-        </tr>
-    </tbody>
-</table>
+[Wiki](https://github.com/bupy7/jquery-cropbox/wiki/)
 
 # Usage
 

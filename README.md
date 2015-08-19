@@ -24,9 +24,9 @@ Include:
 
 ```html
 <link href="/PATH_TO_BOWER/jq-cropbox/dist/jquery.cropbox.min.css" rel="stylesheet">
-<script src="/PATH_TO_BOWER/jquery/dist/jquery.min.js"></script>
-<script src="/PATH_TO_BOWER/jquery-mousewheel/jquery.mousewheel.min.js"></script>
-<script type="text/javascript">/PATH_TO_BOWER/jq-cropbox/dist/jquery.cropbox.min.js</script>
+<script type="text/javascript" src="/PATH_TO_BOWER/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/PATH_TO_BOWER/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="/PATH_TO_BOWER/jq-cropbox/dist/jquery.cropbox.min.js"></script>
 ```
 
 Create a skeleton:

@@ -18,6 +18,11 @@ This Cropper can resize, zoom, move image before crop.
 bower install jq-cropbox#1.0.*
 ```
 
+## Requirements
+
+- [jQuery](https://github.com/jquery/jquery) >= 1.8
+- [jquery-mousewheel](https://github.com/jquery/jquery-mousewheel)
+
 ## Usage
 
 Include:
@@ -91,10 +96,60 @@ $('#plugin').cropbox({
 
 ## Options
 
-TODO
+### ```selectors``` (required)
 
-- ```selectors``` - Selectors of skeleton plugin.
+Selectors is required property where must be content:
 
+**Required:**
+- ```inputInfo``` - Selector to input type "text"/"textarea" where will be write information about cropped.
+- ```inputFile``` - Selector to input type "file" for select image from file.
+- ```btnCrop``` - Selector to button for run crop action.
+- ```btnReset``` - Selector to button for run reset action.
+- ```resultContainer``` - Content cropped images.
+
+**Additional:**
+- ```messageBlock``` - If you set property ```messages``` then you must be set selector for display it messages.
+
+### ```variants``` (required)
+
+Variants of crop image. Supported few crop settings.
+
+By default variants content following settings:
+
+```js
+variants = [
+    {
+        width: 200,
+        height: 200,
+        minWidth: 200,
+        minHeight: 200,
+        maxWidth: 350,
+        maxHeight: 350
+    }
+]
+``` 
+
+You can set your settings of frame crop.
+
+**Required:**
+- ```width``` - Width of frame crop (px).
+- ```height```  - Height of frame crop (px).
+
+**Additional:**
+- ```minWidth``` - Minimal width of frame crop for resize it (px).
+- ```maxWidth``` - Maximum width of frame crop for resize it (px).
+- ```minHeight``` - Minimal height of frame crop for resize it (px).
+- ```maxHeight``` - Maximum height of frame crop for resize it (px).
+
+You can set both or one options max(min)Width/max(min)Height of resize frame crop. 
+
+### ```imageOptions```
+
+HTML-attributes for cropped images which content to ```resultContainer```.
+
+### ```messages```
+
+Text/Html messages for current frame crop settings.
 
 ## License
 

@@ -127,7 +127,7 @@
                 frameWidth = $frame.width(),
                 frameHeight = $frame.height(),
                 canvas = $('<canvas/>').attr({width: frameWidth, height: frameHeight})[0],
-                dImage = null;
+                image = null;
             canvas
                 .getContext('2d')
                 .drawImage(
@@ -141,7 +141,7 @@
                     $image.width(),
                     $image.height()
                 );
-            dImage = canvas.toDataURL('image/png');
+            image = canvas.toDataURL('image/png');
             addInfo({
                 sWidth: sourceImage.width,
                 sHeight: sourceImage.height,
@@ -152,9 +152,9 @@
                 ratio: ratio,
                 width: frameWidth,
                 height: frameHeight,
-                dImage: dImage
+                image: image
             });
-            addToContainer($('<img>', $.extend(imageOptions, {src: dImage})));
+            addToContainer($('<img>', $.extend(imageOptions, {src: image})));
             if (nextVariant()) {
                 nextMessage();
             }

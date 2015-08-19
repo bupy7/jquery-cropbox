@@ -1,5 +1,6 @@
 /**
- * Cropbox module of jQuery. A lightweight and simple plugin to crop your image. 
+ * jQuery-Cropbox. 
+ * A lightweight and simple plugin to crop your image. 
  *    ___
  *   |   |
  *   |---|
@@ -48,7 +49,7 @@
         $btnReset = null,
         $btnCrop = null,
         $resultContainer = null,
-        $inputCropInfo = null,
+        $inputInfo = null,
         $messageBlock = null,
         imageOptions = {},
         variants = [
@@ -68,13 +69,13 @@
                 $th = $(this);
                 // merge options
                 variants = options.variants || variants; 
+                imageOptions = options.imageOptions || imageOptions;
+                messages = options.messages || messages;
                 $inputFile = $(options.selectors.inputFile);
-                $inputCropInfo = $(options.selectors.inputCropInfo);   
+                $inputInfo = $(options.selectors.inputInfo);   
                 $btnReset = $(options.selectors.btnReset);
                 $btnCrop = $(options.selectors.btnCrop);
                 $resultContainer = $(options.selectors.resultContainer);
-                imageOptions = options.imageResultOptions || imageOptions;
-                messages = options.messages || messages;
                 $messageBlock = $(options.selectors.messageBlock);
                 // initialize plugin
                 initResultBackup();
@@ -123,8 +124,11 @@
         cropImage = function() {
             var x = $frame.position().left - $image.position().left,
                 y = $frame.position().top - $image.position().top,
-                canvas = $('<canvas/>').attr({width: $frame.width(), height: $frame.height()})[0];
-                canvas
+                frameWidth = $frame.width(),
+                frameHeight = $frame.height(),
+                canvas = $('<canvas/>').attr({width: frameWidth, height: frameHeight})[0],
+                dImage = null;
+            canvas
                 .getContext('2d')
                 .drawImage(
                     $image[0], 
@@ -137,8 +141,8 @@
                     $image.width(),
                     $image.height()
                 );
-            var dImage = canvas.toDataURL('image/png');
-            addCropInfo({
+            dImage = canvas.toDataURL('image/png');
+            addInfo({
                 sWidth: sourceImage.width,
                 sHeight: sourceImage.height,
                 x: x,
@@ -146,6 +150,8 @@
                 dWidth: $image.width(),
                 dHeight: $image.height(),
                 ratio: ratio,
+                width: frameWidth,
+                height: frameHeight,
                 dImage: dImage
             });
             addToContainer($('<img>', $.extend(imageOptions, {src: dImage})));
@@ -390,17 +396,17 @@
             initFrame();
             return true;
         },
-        setCropInfo = function(value) {
-            $inputCropInfo.val(JSON.stringify(value));
+        setInfo = function(value) {
+            $inputInfo.val(JSON.stringify(value));
         },
-        addCropInfo = function(value) {
-            var data = JSON.parse($inputCropInfo.val());
+        addInfo = function(value) {
+            var data = JSON.parse($inputInfo.val());
             data.push(value);
-            $inputCropInfo.val(JSON.stringify(data));
+            $inputInfo.val(JSON.stringify(data));
         },
         reset = function() {
             resultFromBackup();
-            $inputCropInfo.val([]);
+            setInfo([]);
             resetVariant();
             hideWorkarea();
             disableControls();
@@ -408,7 +414,7 @@
         },
         start = function() {
             emptyResultContainer();
-            setCropInfo([]);
+            setInfo([]);
             resetVariant();
             showWorkarea();
             initRatio();                   
@@ -429,10 +435,16 @@
             $btnCrop.prop('disabled', false);
         },
         nextMessage = function() {
-            $messageBlock.html(messages[indexVariant]);
+            if (!showMessage()) {
+                hideMessage();
+            }
         },
         showMessage = function() {
-            $messageBlock.html(messages[indexVariant]).show();
+            if (typeof messages[indexVariant] != 'undefined') {
+                $messageBlock.html(messages[indexVariant]).show();
+                return true;
+            }
+            return false;
         },
         hideMessage = function() {
             $messageBlock.hide();

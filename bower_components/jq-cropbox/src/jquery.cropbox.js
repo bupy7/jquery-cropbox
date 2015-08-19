@@ -68,15 +68,17 @@
             init: function(options) {
                 $th = $(this);
                 // merge options
-                variants = options.variants || variants; 
-                imageOptions = options.imageOptions || imageOptions;
-                messages = options.messages || messages;
                 $inputFile = $(options.selectors.inputFile);
                 $inputInfo = $(options.selectors.inputInfo);   
                 $btnReset = $(options.selectors.btnReset);
                 $btnCrop = $(options.selectors.btnCrop);
                 $resultContainer = $(options.selectors.resultContainer);
-                $messageBlock = $(options.selectors.messageBlock);
+                variants = options.variants || variants; 
+                imageOptions = options.imageOptions || imageOptions;
+                messages = options.messages || messages;
+                if (typeof options.selectors.messageBlock != 'undefined') {
+                    $messageBlock = $(options.selectors.messageBlock);
+                }
                 // initialize plugin
                 initResultBackup();
                 initComponents();
@@ -440,14 +442,16 @@
             }
         },
         showMessage = function() {
-            if (typeof messages[indexVariant] != 'undefined') {
+            if (typeof messages[indexVariant] != 'undefined' && $messageBlock !== null) {
                 $messageBlock.html(messages[indexVariant]).show();
                 return true;
             }
             return false;
         },
         hideMessage = function() {
-            $messageBlock.hide();
+            if ($messageBlock !== null) {
+                $messageBlock.hide();
+            }
         },
         initResultBackup = function() {
             $backupResultContainer = $resultContainer.clone();

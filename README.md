@@ -4,21 +4,21 @@ A Cropper image writing at jQuery.
 
 This Cropper can resize, zoom, move image before crop.
 
-# Wrappers
+## Wrappers
 
 - [Yii2](https://github.com/bupy7/yii2-widget-cropbox)
 
-# Demo
+## Demo
 
 [jQuery-Cropbox Demo](http://bupy7.github.io/jquery-cropbox/)
 
-# Install via Bower
+## Install via Bower
 
 ```
 bower install jq-cropbox#1.0.*
 ```
 
-# Usage
+## Usage
 
 Include:
 
@@ -89,13 +89,13 @@ $('#plugin').cropbox({
 });
 ```
 
-# Options
+## Options
 
 TODO
 
 - ```selectors``` - Selectors of skeleton plugin.
 
 
-# License
+## License
 
 yii2-widget-cropbox is released under the BSD 3-Clause License.

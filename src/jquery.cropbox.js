@@ -283,7 +283,6 @@
             }
         },
         resizeMouseUp = function(event) {
-
             event.preventDefault();
             event.stopPropagation();
 
@@ -311,7 +310,6 @@
             }
         },
         imageMouseUp = function(event) {
-
             event.preventDefault();
             event.stopPropagation();
 
@@ -477,7 +475,7 @@
         
     $.fn.cropbox = function(options) {
         if (methods[options]) {
-			return methods[options].apply(this, Array.prototype.slice.call(arguments, 1));
+        	return methods[options].apply(this, Array.prototype.slice.call(arguments, 1));
 		} else if (typeof options === 'object' || ! options) {
 			return methods.init.apply(this, arguments);
 		} else {

@@ -1,6 +1,6 @@
 /**
- * jQuery-Cropbox. 
- * A lightweight and simple plugin to crop your image. 
+ * jQuery-Cropbox.
+ * A lightweight and simple plugin to crop your image.
  *    ___
  *   |   |
  *   |---|
@@ -12,7 +12,7 @@
  * |       |
  * |       |
  * |_______| From Russia with love.
- * 
+ *
  * Belosludcev Vasilij https://github.com/bupy7
  * Homepage of extension: https://github.com/bupy7/jquery-cropbox
  * v1.0.0
@@ -44,7 +44,7 @@
         ratio = 1,
         indexVariant = 0,
         $backupResultContainer = null,
-        // options of plugin
+    // options of plugin
         $inputFile = null,
         $btnReset = null,
         $btnCrop = null,
@@ -65,28 +65,28 @@
         messages = [];
     // public methods
     var methods = {
-            init: function(options) {
-                $th = $(this);
-                // merge options
-                $inputFile = $(options.selectors.inputFile);
-                $inputInfo = $(options.selectors.inputInfo);   
-                $btnReset = $(options.selectors.btnReset);
-                $btnCrop = $(options.selectors.btnCrop);
-                $resultContainer = $(options.selectors.resultContainer);
-                variants = options.variants || variants; 
-                imageOptions = options.imageOptions || imageOptions;
-                messages = options.messages || messages;
-                if (typeof options.selectors.messageBlock != 'undefined') {
-                    $messageBlock = $(options.selectors.messageBlock);
-                }
-                // initialize plugin
-                initResultBackup();
-                initComponents();
-                disableControls();
-                hideMessage();
-                initEvents();
+        init: function(options) {
+            $th = $(this);
+            // merge options
+            $inputFile = $(options.selectors.inputFile);
+            $inputInfo = $(options.selectors.inputInfo);
+            $btnReset = $(options.selectors.btnReset);
+            $btnCrop = $(options.selectors.btnCrop);
+            $resultContainer = $(options.selectors.resultContainer);
+            variants = options.variants || variants;
+            imageOptions = options.imageOptions || imageOptions;
+            messages = options.messages || messages;
+            if (typeof options.selectors.messageBlock != 'undefined') {
+                $messageBlock = $(options.selectors.messageBlock);
             }
-        };
+            // initialize plugin
+            initResultBackup();
+            initComponents();
+            disableControls();
+            hideMessage();
+            initEvents();
+        }
+    };
     // protected methods
     var initComponents = function() {
             $image = $th.find('.image-cropbox');
@@ -133,16 +133,16 @@
             canvas
                 .getContext('2d')
                 .drawImage(
-                    $image[0], 
-                    0, 
-                    0,  
-                    sourceImage.width, 
-                    sourceImage.height,
-                    -x,
-                    -y,
-                    $image.width(),
-                    $image.height()
-                );
+                $image[0],
+                0,
+                0,
+                sourceImage.width,
+                sourceImage.height,
+                -x,
+                -y,
+                $image.width(),
+                $image.height()
+            );
             image = canvas.toDataURL('image/png');
             addInfo({
                 sWidth: sourceImage.width,
@@ -183,7 +183,7 @@
             } else if ($image.width() + imgLeft < left + $frame.width()) {
                 x = $frame.width() - $image.width();
                 left = imgLeft + $image.width() - $frame.width();
-            } 
+            }
             if (y > 0) {
                 y = 0;
                 top = imgTop;
@@ -235,7 +235,7 @@
             } else if (height < minHeight) {
                 height = minHeight;
             }
-            if ($image.height() + imgTop < frameTop + height) {   
+            if ($image.height() + imgTop < frameTop + height) {
                 height = $image.height() + imgTop - frameTop;
             }
             $frame.css({width: width, height: height});
@@ -257,12 +257,16 @@
                 refrashPosFrame(left, top);
             }
         },
-        frameMouseUp = function() {
+        frameMouseUp = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
             frameState.dragable = false;
         },
         resizeMouseDown = function(event) {
-            event.stopImmediatePropagation();    
-            
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
             resizeState.dragable = true;
             resizeState.mouseX = event.clientX;
             resizeState.mouseY = event.clientY;
@@ -280,7 +284,8 @@
             }
         },
         resizeMouseUp = function(event) {
-            event.stopImmediatePropagation();    
+            event.preventDefault();
+            event.stopPropagation();
 
             resizeState.dragable = false;
         },
@@ -305,7 +310,10 @@
                 refrashPosFrame($frame.position().left, $frame.position().top);
             }
         },
-        imageMouseUp = function() {
+        imageMouseUp = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
             imageState.dragable = false;
         },
         refrashImage = function(left, top) {
@@ -313,8 +321,8 @@
         },
         initImage = function() {
             var left = $image.width() / 2 - $workarea.width() / 2,
-                top = $image.height() / 2 - $workarea.height() / 2;                   
-            refrashImage(-left, -top); 
+                top = $image.height() / 2 - $workarea.height() / 2;
+            refrashImage(-left, -top);
         },
         loadImage = function(event) {
             $(sourceImage).one(EVENT_LOAD, function() {
@@ -323,13 +331,13 @@
             });
             sourceImage.src = event.target.result;
         },
-        resizeWorkarea = function() { 
+        resizeWorkarea = function() {
             initRatio();
             initImage();
             initFrame();
         },
         imageMouseWheel = function(event) {
-            if (event.deltaY > 0) {              
+            if (event.deltaY > 0) {
                 zoomIn();
             } else {
                 zoomOut();
@@ -419,8 +427,8 @@
             setInfo([]);
             resetVariant();
             showWorkarea();
-            initRatio();                   
-            initImage(); 
+            initRatio();
+            initImage();
             initFrame();
             enableControls();
             showMessage();
@@ -460,19 +468,19 @@
             $resultContainer.html($backupResultContainer.html());
         },
         addToContainer = function(content) {
-            $resultContainer.append(content);  
+            $resultContainer.append(content);
         },
         emptyResultContainer = function() {
             $resultContainer.empty();
         };
-        
+
     $.fn.cropbox = function(options) {
         if (methods[options]) {
-			return methods[options].apply(this, Array.prototype.slice.call(arguments, 1));
-		} else if (typeof options === 'object' || ! options) {
-			return methods.init.apply(this, arguments);
-		} else {
-			$.error('Method "' +  options + '" not exists.');
-		}
-    };  
+            return methods[options].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof options === 'object' || ! options) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method "' +  options + '" not exists.');
+        }
+    };
 })(jQuery);

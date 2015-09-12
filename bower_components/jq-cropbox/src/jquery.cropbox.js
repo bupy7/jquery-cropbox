@@ -15,7 +15,7 @@
  * 
  * Belosludcev Vasilij https://github.com/bupy7
  * Homepage of extension: https://github.com/bupy7/jquery-cropbox
- * v1.0.0
+ * v1.0.1
  */
 "use strict";
 (function ($) {
@@ -257,7 +257,7 @@
                 refrashPosFrame(left, top);
             }
         },
-        frameMouseUp = function() {
+        frameMouseUp = function(event) {
             event.preventDefault();
             event.stopPropagation();
 
@@ -283,7 +283,6 @@
             }
         },
         resizeMouseUp = function(event) {
-
             event.preventDefault();
             event.stopPropagation();
 
@@ -311,7 +310,6 @@
             }
         },
         imageMouseUp = function(event) {
-
             event.preventDefault();
             event.stopPropagation();
 
@@ -477,11 +475,11 @@
         
     $.fn.cropbox = function(options) {
         if (methods[options]) {
-			return methods[options].apply(this, Array.prototype.slice.call(arguments, 1));
-		} else if (typeof options === 'object' || ! options) {
-			return methods.init.apply(this, arguments);
-		} else {
-			$.error('Method "' +  options + '" not exists.');
-		}
+            return methods[options].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof options === 'object' || ! options) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method "' +  options + '" not exists.');
+        }
     };  
 })(jQuery);

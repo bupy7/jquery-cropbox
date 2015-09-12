@@ -258,6 +258,9 @@
             }
         },
         frameMouseUp = function() {
+            event.preventDefault();
+            event.stopPropagation();
+
             frameState.dragable = false;
         },
         resizeMouseDown = function(event) {
@@ -280,7 +283,9 @@
             }
         },
         resizeMouseUp = function(event) {
-            event.stopImmediatePropagation();    
+
+            event.preventDefault();
+            event.stopPropagation();
 
             resizeState.dragable = false;
         },
@@ -305,7 +310,11 @@
                 refrashPosFrame($frame.position().left, $frame.position().top);
             }
         },
-        imageMouseUp = function() {
+        imageMouseUp = function(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
             imageState.dragable = false;
         },
         refrashImage = function(left, top) {

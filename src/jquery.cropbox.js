@@ -257,7 +257,7 @@
                 refrashPosFrame(left, top);
             }
         },
-        frameMouseUp = function() {
+        frameMouseUp = function(event) {
             event.preventDefault();
             event.stopPropagation();
 

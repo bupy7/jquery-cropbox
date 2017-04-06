@@ -151,6 +151,22 @@ HTML-attributes for cropped images which content to ```resultContainer```.
 
 Text/Html messages for current frame crop settings.
 
+## Events
+
+### `cb.cropped`
+
+The event running when you cropped an image.
+
+The event have one an argument: `info`. `info` contain data about a cropped image.
+ 
+Example usage:
+
+```js
+$('#cropbox').on('cb.cropped', function(event, info) {
+    console.log(info);
+});
+```
+
 ## License
 
 yii2-widget-cropbox is released under the BSD 3-Clause License.

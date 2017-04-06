@@ -15,10 +15,11 @@
  * 
  * Belosludcev Vasilij https://github.com/bupy7
  * Homepage of extension: https://github.com/bupy7/jquery-cropbox
- * v1.0.1
+ * v1.0.2
  */
-"use strict";
-(function ($) {
+;(function ($) {
+    "use strict";
+
     // const
     var EVENT_MOUSE_DOWN = 'mousedown',
         EVENT_MOUSE_MOVE = 'mousemove',
@@ -143,23 +144,25 @@
                     $image.width(),
                     $image.height()
                 );
-            image = canvas.toDataURL('image/png');
-            addInfo({
-                sWidth: sourceImage.width,
-                sHeight: sourceImage.height,
-                x: x,
-                y: y,
-                dWidth: $image.width(),
-                dHeight: $image.height(),
-                ratio: ratio,
-                width: frameWidth,
-                height: frameHeight,
-                image: image
-            });
+            var image = canvas.toDataURL('image/png'),
+                info = {
+                    sWidth: sourceImage.width,
+                    sHeight: sourceImage.height,
+                    x: x,
+                    y: y,
+                    dWidth: $image.width(),
+                    dHeight: $image.height(),
+                    ratio: ratio,
+                    width: frameWidth,
+                    height: frameHeight,
+                    image: image
+                };
+            addInfo(info);
             addToContainer($('<img>', $.extend(imageOptions, {src: image})));
             if (nextVariant()) {
                 nextMessage();
             }
+            $th.trigger('cb.cropped', [info]);
         },
         initFrame = function() {
             var variant = getCurrentVariant(),

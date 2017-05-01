@@ -5,7 +5,7 @@
     "authors": [
         "Vasilij Belosludcev <bupy765@gmail.com>"
     ],
-    "description": "A lightweight and simple plugin to crop your image.",
+    "description": "[DEPRECATED] A lightweight and simple plugin to crop your image. This plugin is unsupported. You should use http://bupy7.github.io/js-cropbox/",
     "main": [
         "dist/*.js",
         "dist/*.css",

@@ -1,5 +1,7 @@
 # jquery-cropbox
 
+### [DEPRECATED] This plugin is unsupported. You should use [js-cropbox](http://bupy7.github.io/js-cropbox/).
+
 A Cropper image writing at jQuery.
 
 This Cropper can resize, zoom, move image before crop.
